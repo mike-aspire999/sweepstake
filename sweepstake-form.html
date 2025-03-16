@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweepstake Entry Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .entry-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .entry-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .team-scores {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .team-score {
+            flex: 1;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .cost-summary {
+            text-align: right;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        #success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sweepstake Entry Form</h1>
+    
+    <form id="sweepstakeForm">
+        <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="numEntries">Number of Entries (£25 each):</label>
+            <input type="number" id="numEntries" name="numEntries" min="1" max="10" value="1" required>
+        </div>
+        
+        <div class="cost-summary" id="costSummary">
+            Total Cost: £25
+        </div>
+        
+        <div id="entriesContainer">
+            <!-- Entries will be dynamically added here -->
+            <div class="entry-container" id="entry1">
+                <div class="entry-header">Entry #1</div>
+                <div class="team-scores">
+                    <div class="team-score">
+                        <label for="warriors1">The Warriors:</label>
+                        <input type="number" id="warriors1" name="warriors1" min="0" required>
+                    </div>
+                    <div class="team-score">
+                        <label for="roosters1">The Roosters:</label>
+                        <input type="number" id="roosters1" name="roosters1" min="0" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit">Submit Entries</button>
+    </form>
+    
+    <div id="success-message" class="hidden">
+        Thank you for your submission! Your entries have been recorded.
+    </div>
+    
+    <script>
+        // Handle number of entries change
+        document.getElementById('numEntries').addEventListener('change', function() {
+            const numEntries = parseInt(this.value);
+            updateEntries(numEntries);
+            updateCostSummary(numEntries);
+        });
+        
+        // Update cost summary
+        function updateCostSummary(numEntries) {
+            const totalCost = numEntries * 25;
+            document.getElementById('costSummary').textContent = `Total Cost: £${totalCost}`;
+        }
+        
+        // Update entries based on selected number
+        function updateEntries(numEntries) {
+            const container = document.getElementById('entriesContainer');
+            const currentEntries = container.children.length;
+            
+            if (numEntries > currentEntries) {
+                // Add more entries
+                for (let i = currentEntries + 1; i <= numEntries; i++) {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'entry-container';
+                    entryDiv.id = `entry${i}`;
+                    
+                    entryDiv.innerHTML = `
+                        <div class="entry-header">Entry #${i}</div>
+                        <div class="team-scores">
+                            <div class="team-score">
+                                <label for="warriors${i}">The Warriors:</label>
+                                <input type="number" id="warriors${i}" name="warriors${i}" min="0" required>
+                            </div>
+                            <div class="team-score">
+                                <label for="roosters${i}">The Roosters:</label>
+                                <input type="number" id="roosters${i}" name="roosters${i}" min="0" required>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(entryDiv);
+                }
+            } else if (numEntries < currentEntries) {
+                // Remove extra entries
+                for (let i = currentEntries; i > numEntries; i--) {
+                    container.removeChild(container.lastChild);
+                }
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('sweepstakeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect all form data
+            const formData = {
+                name: document.getElementById('name').value,
+                numEntries: parseInt(document.getElementById('numEntries').value),
+                entries: []
+            };
+            
+            // Collect data for each entry
+            for (let i = 1; i <= formData.numEntries; i++) {
+                formData.entries.push({
+                    entryNumber: i,
+                    warriorsScore: parseInt(document.getElementById(`warriors${i}`).value),
+                    roostersScore: parseInt(document.getElementById(`roosters${i}`).value)
+                });
+            }
+            
+            // Here we would normally send the data to Google Sheets
+            console.log('Form data to be sent:', formData);
+            
+            // In a real implementation, we would make an API call here
+            submitToGoogleSheets(formData);
+            
+            // Show success message
+            document.getElementById('success-message').classList.remove('hidden');
+            document.getElementById('sweepstakeForm').reset();
+            
+            // Reset to 1 entry after submission
+            document.getElementById('numEntries').value = 1;
+            updateEntries(1);
+            updateCostSummary(1);
+        });
+        
+        // Function to submit to Google Sheets (placeholder)
+        function submitToGoogleSheets(formData) {
+            // In a real implementation, this would make a fetch or XMLHttpRequest to your Google Apps Script endpoint
+            // For demonstration, we're just logging the data
+            console.log("Submitting to Google Sheets:", formData);
+            
+            // The actual implementation would look something like this:
+            
+            fetch('https://script.google.com/macros/s/AKfycbzgQgYnDQD0EEmdGpJjp_xHhvT8d77rSO8qKoTbmKT226aPC-NR-NSguSiNylndaDsq/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
+        }
+    </script>
+</body>
+</html>
