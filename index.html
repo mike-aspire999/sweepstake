@@ -4,54 +4,235 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sweepstake Entry Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Your existing CSS here */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --light-bg: #f9f9f9;
+            --border-color: #ddd;
+            --text-color: #333;
+            --light-text: #777;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f8fa;
+            max-width: 700px;
             margin: 0 auto;
             padding: 20px;
         }
-        /* Rest of your CSS unchanged */
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 28px;
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .entry-container {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .entry-container:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .entry-header {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .entry-header::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--border-color);
+            margin-left: 10px;
+        }
+        
+        .team-scores {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .team-score {
+            flex: 1;
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .cost-summary {
+            text-align: right;
+            font-weight: 500;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            color: var(--primary-color);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .info-text {
+            color: var(--light-text);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        @media (max-width: 600px) {
+            .team-scores {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Sweepstake Entry Form</h1>
-    
-    <form id="sweepstakeForm" method="POST" action="https://script.google.com/macros/s/AKfycbxars8GOBnT4Gxc7Nx0BR01sBXTirYiyohp-9zfb3_qKJEV3arOPWfqPNsusbmSEq_s/exec">
-        <div class="form-group">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
+    <div class="container">
+        <h1>Sweepstake Entry Form</h1>
         
-        <div class="form-group">
-            <label for="numEntries">Number of Entries (£25 each):</label>
-            <input type="number" id="numEntries" name="numEntries" min="1" max="10" value="1" required>
-        </div>
-        
-        <div class="cost-summary" id="costSummary">
-            Total Cost: £25
-        </div>
-        
-        <!-- Entries containers will be added here -->
-        <div id="entriesContainer">
-            <div class="entry-container" id="entry1">
-                <div class="entry-header">Entry #1</div>
-                <div class="team-scores">
-                    <div class="team-score">
-                        <label for="warriors1">The Warriors:</label>
-                        <input type="number" id="warriors1" name="warriors1" min="0" required>
-                    </div>
-                    <div class="team-score">
-                        <label for="roosters1">The Roosters:</label>
-                        <input type="number" id="roosters1" name="roosters1" min="0" required>
+        <form id="sweepstakeForm" method="POST" action="https://script.google.com/macros/s/AKfycbyrUv1MK2D3ZDt8kcsXq47C00DL8ToJyiDagjgHQBI6G28hF265lLl3GsyDx6CTtVgJ/exec">
+            <div class="form-group">
+                <label for="name" class="required">Your Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">Your Email</label>
+                <input type="email" id="email" name="email" required>
+                <div class="info-text">We'll use this to contact you if you win</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="numEntries" class="required">Number of Entries ($25 each)</label>
+                <input type="number" id="numEntries" name="numEntries" min="1" max="10" value="1" required>
+            </div>
+            
+            <div class="cost-summary" id="costSummary">
+                Entry Cost: $25 each
+            </div>
+            
+            <div id="entriesContainer">
+                <!-- Entries will be dynamically added here -->
+                <div class="entry-container" id="entry1">
+                    <div class="entry-header">Entry #1</div>
+                    <div class="team-scores">
+                        <div class="team-score">
+                            <label for="warriors1" class="required">The Warriors</label>
+                            <input type="number" id="warriors1" name="warriors1" min="0" required>
+                        </div>
+                        <div class="team-score">
+                            <label for="roosters1" class="required">The Roosters</label>
+                            <input type="number" id="roosters1" name="roosters1" min="0" required>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <button type="submit">Submit Entries</button>
-    </form>
+            
+            <button type="submit">Submit Entries</button>
+        </form>
+    </div>
     
     <div id="success-message" class="hidden">
         Thank you for your submission! Your entries have been recorded.
@@ -62,14 +243,7 @@
         document.getElementById('numEntries').addEventListener('change', function() {
             const numEntries = parseInt(this.value);
             updateEntries(numEntries);
-            updateCostSummary(numEntries);
         });
-        
-        // Update cost summary
-        function updateCostSummary(numEntries) {
-            const totalCost = numEntries * 25;
-            document.getElementById('costSummary').textContent = `Total Cost: £${totalCost}`;
-        }
         
         // Update entries based on selected number
         function updateEntries(numEntries) {
@@ -87,11 +261,11 @@
                         <div class="entry-header">Entry #${i}</div>
                         <div class="team-scores">
                             <div class="team-score">
-                                <label for="warriors${i}">The Warriors:</label>
+                                <label for="warriors${i}" class="required">The Warriors</label>
                                 <input type="number" id="warriors${i}" name="warriors${i}" min="0" required>
                             </div>
                             <div class="team-score">
-                                <label for="roosters${i}">The Roosters:</label>
+                                <label for="roosters${i}" class="required">The Roosters</label>
                                 <input type="number" id="roosters${i}" name="roosters${i}" min="0" required>
                             </div>
                         </div>
@@ -114,3 +288,4 @@
         });
     </script>
 </body>
+</html>
