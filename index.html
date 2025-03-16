@@ -195,42 +195,40 @@
             // Here we would normally send the data to Google Sheets
             console.log('Form data to be sent:', formData);
             
-            // In a real implementation, we would make an API call here
+            // Submit to Google Sheets
             submitToGoogleSheets(formData);
-            
-            // Show success message
-            document.getElementById('success-message').classList.remove('hidden');
-            document.getElementById('sweepstakeForm').reset();
-            
-            // Reset to 1 entry after submission
-            document.getElementById('numEntries').value = 1;
-            updateEntries(1);
-            updateCostSummary(1);
         });
         
-        // Function to submit to Google Sheets (placeholder)
+        // Function to submit to Google Sheets
         function submitToGoogleSheets(formData) {
-            // In a real implementation, this would make a fetch or XMLHttpRequest to your Google Apps Script endpoint
-            // For demonstration, we're just logging the data
             console.log("Submitting to Google Sheets:", formData);
             
-            // The actual implementation would look something like this:
+            // Create a hidden form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://script.google.com/macros/s/AKfycbzPSbzrEwlCG5E2m_dvEeDcTEQldRwH0u9DK9newKhmodReDpUX0ww0236Wj_Q9gotq/exec'; // Your script URL
             
-            fetch('https://script.google.com/macros/s/AKfycbzgQgYnDQD0EEmdGpJjp_xHhvT8d77rSO8qKoTbmKT226aPC-NR-NSguSiNylndaDsq/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            // Add the data as a hidden field
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'data';
+            hiddenField.value = JSON.stringify(formData);
+            form.appendChild(hiddenField);
             
+            // Submit the form
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Show success message
+            setTimeout(function() {
+                document.getElementById('success-message').classList.remove('hidden');
+                document.getElementById('sweepstakeForm').reset();
+                    
+                // Reset to 1 entry after submission
+                document.getElementById('numEntries').value = 1;
+                updateEntries(1);
+                updateCostSummary(1);
+            }, 1000);
         }
     </script>
 </body>
