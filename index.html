@@ -5,85 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sweepstake Entry Form</title>
     <style>
+        /* Your existing CSS here */
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .entry-container {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-        .entry-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .team-scores {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-        .team-score {
-            flex: 1;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .cost-summary {
-            text-align: right;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .hidden {
-            display: none;
-        }
-        #success-message {
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 20px;
-            text-align: center;
-        }
+        /* Rest of your CSS unchanged */
     </style>
 </head>
 <body>
     <h1>Sweepstake Entry Form</h1>
     
-    <form id="sweepstakeForm">
+    <form id="sweepstakeForm" method="POST" action="https://script.google.com/macros/s/AKfycbzPSbzrEwlCG5E2m_dvEeDcTEQldRwH0u9DK9newKhmodReDpUX0ww0236Wj_Q9gotq/exec">
         <div class="form-group">
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
@@ -98,8 +33,8 @@
             Total Cost: £25
         </div>
         
+        <!-- Entries containers will be added here -->
         <div id="entriesContainer">
-            <!-- Entries will be dynamically added here -->
             <div class="entry-container" id="entry1">
                 <div class="entry-header">Entry #1</div>
                 <div class="team-scores">
@@ -174,62 +109,8 @@
         
         // Handle form submission
         document.getElementById('sweepstakeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Collect all form data
-            const formData = {
-                name: document.getElementById('name').value,
-                numEntries: parseInt(document.getElementById('numEntries').value),
-                entries: []
-            };
-            
-            // Collect data for each entry
-            for (let i = 1; i <= formData.numEntries; i++) {
-                formData.entries.push({
-                    entryNumber: i,
-                    warriorsScore: parseInt(document.getElementById(`warriors${i}`).value),
-                    roostersScore: parseInt(document.getElementById(`roosters${i}`).value)
-                });
-            }
-            
-            // Here we would normally send the data to Google Sheets
-            console.log('Form data to be sent:', formData);
-            
-            // Submit to Google Sheets
-            submitToGoogleSheets(formData);
+            // Form will submit normally to the Apps Script URL
+            // No need to prevent default
         });
-        
-        // Function to submit to Google Sheets
-        function submitToGoogleSheets(formData) {
-            console.log("Submitting to Google Sheets:", formData);
-            
-            // Create a hidden form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://script.google.com/macros/s/AKfycbzPSbzrEwlCG5E2m_dvEeDcTEQldRwH0u9DK9newKhmodReDpUX0ww0236Wj_Q9gotq/exec'; // Your script URL
-            
-            // Add the data as a hidden field
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = 'data';
-            hiddenField.value = JSON.stringify(formData);
-            form.appendChild(hiddenField);
-            
-            // Submit the form
-            document.body.appendChild(form);
-            form.submit();
-            
-            // Show success message
-            setTimeout(function() {
-                document.getElementById('success-message').classList.remove('hidden');
-                document.getElementById('sweepstakeForm').reset();
-                    
-                // Reset to 1 entry after submission
-                document.getElementById('numEntries').value = 1;
-                updateEntries(1);
-                updateCostSummary(1);
-            }, 1000);
-        }
     </script>
 </body>
-</html>
